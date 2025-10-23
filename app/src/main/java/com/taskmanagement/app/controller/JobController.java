@@ -22,22 +22,16 @@ public class JobController {
         return service.createJob(dto);
     }
 
+
     @PostMapping("/create/sub-job/{parentJobId}")
     public JobDTO createSubJob(@PathVariable Integer parentJobId, @RequestBody JobDTO dto) {
         return service.createSubJob(dto, parentJobId);
     }
 
-    // You can use single endpoint to manage both assignment and unassignment for a job for a user
-    // if the user id is not provided it means that the job is being unassigned from the current user
-    @PutMapping("/assign/{jobId}/{userId}")
-    public JobDTO assignJobToUser(@PathVariable Integer jobId, @PathVariable Integer userId) {
-        return service.assignJobToUser(jobId, userId);
-    }
 
-
-    @PutMapping("/unassign/{jobId}")
-    public JobDTO unassignUser(@PathVariable Integer jobId) {
-        return service.unassignUserFromJob(jobId);
+    @PutMapping("/set-user/{jobId}")
+    public JobDTO setJobToUser (@PathVariable Integer jobId, @RequestParam(required = false) Integer userId) {
+        return service.setJobToUser(jobId, userId);
     }
 
 

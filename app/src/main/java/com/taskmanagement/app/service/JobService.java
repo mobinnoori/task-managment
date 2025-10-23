@@ -33,6 +33,7 @@ public class JobService {
         return jobMapper.toDTO(savedJob);
     }
 
+
     public JobDTO createSubJob(JobDTO dto, Integer parentJobId) {
         Job parent = jobRepository.findById(parentJobId)
                 .orElseThrow(() -> new JobNotFoundException(parentJobId));
@@ -45,26 +46,20 @@ public class JobService {
     }
 
 
-    public JobDTO assignJobToUser(Integer jobId, Integer userId) {
+    public JobDTO setJobToUser(Integer jobId, Integer userId) {
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new JobNotFoundException(jobId));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-
-        job.setUser(user);
+        // Assign user
+        if (userId != null) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException(userId));
+            job.setUser(user);
+        } else {
+            // Unassign user
+            job.setUser(null);
+        }
         Job updated = jobRepository.save(job);
-        return jobMapper.toDTO(updated);
-    }
-
-
-    public JobDTO unassignUserFromJob(Integer jobId) {
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new JobNotFoundException(jobId));
-
-        job.setUser(null);
-        Job updated = jobRepository.save(job);
-
         return jobMapper.toDTO(updated);
     }
 
