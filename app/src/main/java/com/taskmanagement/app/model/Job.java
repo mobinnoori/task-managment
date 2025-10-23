@@ -14,7 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "user")
+@ToString(exclude = {"user", "parentJob", "subJobs"})
+@EqualsAndHashCode(exclude = {"user", "parentJob", "subJobs"})
 public class Job {
 
     @Id
@@ -35,10 +36,10 @@ public class Job {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_job_id", nullable = true)
+    @JoinColumn(name = "parent_job_id")
     private Job parentJob;
 
-    @OneToMany(mappedBy = "parentJob", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parentJob", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Job> subJobs = new HashSet<>();
 

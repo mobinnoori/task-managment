@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @ToString(exclude = "jobs")
+@EqualsAndHashCode(exclude = "jobs")
 public class User {
 
     @Id
@@ -32,7 +33,7 @@ public class User {
     @Column(nullable = false)
     private JobRole role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Job> jobs = new HashSet<>();
 }
