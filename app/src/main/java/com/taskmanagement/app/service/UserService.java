@@ -1,6 +1,7 @@
 package com.taskmanagement.app.service;
 
 import com.taskmanagement.app.dto.UserDTO;
+import com.taskmanagement.app.dto.UserStatisticsDTO;
 import com.taskmanagement.app.exception.UserNotFoundException;
 import com.taskmanagement.app.mapper.UserMapper;
 import com.taskmanagement.app.model.User;
@@ -58,5 +59,10 @@ public class UserService {
         User user = userRepository.findById(id)
                         .orElseThrow(() -> new UserNotFoundException(id));
         userRepository.deleteById(id);
+    }
+
+
+    public List<UserStatisticsDTO> getUserJobStatistics() {
+        return userRepository.getUserJobStatistics();
     }
 }

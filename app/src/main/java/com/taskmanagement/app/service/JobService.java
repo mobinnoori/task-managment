@@ -1,6 +1,8 @@
 package com.taskmanagement.app.service;
 
 import com.taskmanagement.app.dto.JobDTO;
+import com.taskmanagement.app.dto.JobStatisticsDTO;
+import com.taskmanagement.app.enums.TaskStatus;
 import com.taskmanagement.app.exception.JobNotFoundException;
 import com.taskmanagement.app.exception.UserNotFoundException;
 import com.taskmanagement.app.mapper.JobMapper;
@@ -11,6 +13,8 @@ import com.taskmanagement.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -94,5 +98,35 @@ public class JobService {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new JobNotFoundException(id));
         jobRepository.deleteById(id);
+    }
+
+
+    public List<JobStatisticsDTO> filterJobsWithStats(TaskStatus status, Integer userId, String title) {
+        List<Job> jobs = jobRepository.filterJobsWithSubJobs(String.valueOf(status), userId, title);
+        return jobs.stream().map(this::toStatisticsDTO).toList();
+    }
+
+    private JobStatisticsDTO toStatisticsDTO(Job job) {
+        Set<JobStatisticsDTO> subJobsStats = job.getSubJobs().stream()
+                .map(this::toStatisticsDTO)
+                .collect(Collectors.toSet());
+
+        int totalSub = subJobsStats.size();
+        int completed = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.COMPLETED).count();
+        int inProgress = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.IN_PROGRESS).count();
+        int pending = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.PENDING).count();
+
+        return new JobStatisticsDTO(
+                job.getId(),
+                job.getTitle(),
+                job.getStatus(),
+                job.getUser() != null ? job.getUser().getId() : null,
+                job.getUser() != null ? job.getUser().getName() : null,
+                totalSub,
+                completed,
+                inProgress,
+                pending,
+                subJobsStats
+        );
     }
 }

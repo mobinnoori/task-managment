@@ -1,6 +1,8 @@
 package com.taskmanagement.app.controller;
 
 import com.taskmanagement.app.dto.JobDTO;
+import com.taskmanagement.app.dto.JobStatisticsDTO;
+import com.taskmanagement.app.enums.TaskStatus;
 import com.taskmanagement.app.service.JobService;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,7 @@ public class JobController {
     }
 
 
+    // Assign and Unassign
     @PutMapping("/set-user/{jobId}")
     public JobDTO setJobToUser (@PathVariable Integer jobId, @RequestParam(required = false) Integer userId) {
         return service.setJobToUser(jobId, userId);
@@ -56,5 +59,15 @@ public class JobController {
     @DeleteMapping("/delete/{id}")
     public void deleteJob(@PathVariable Integer id) {
         service.deleteJob(id);
+    }
+
+
+    @GetMapping("/statistics")
+    public List<JobStatisticsDTO> filterJobsWithStats(
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String title
+    ) {
+        return service.filterJobsWithStats(status, userId, title);
     }
 }

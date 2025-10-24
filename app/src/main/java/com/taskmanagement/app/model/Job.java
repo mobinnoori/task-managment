@@ -45,6 +45,4 @@ public class Job {
 
 
     // User statistics
-    // Filtering
-    // Based on job status
 }

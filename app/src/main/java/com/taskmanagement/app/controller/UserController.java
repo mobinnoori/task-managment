@@ -1,6 +1,7 @@
 package com.taskmanagement.app.controller;
 
 import com.taskmanagement.app.dto.UserDTO;
+import com.taskmanagement.app.dto.UserStatisticsDTO;
 import com.taskmanagement.app.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,5 +45,11 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Integer id) {
         service.deleteUser(id);
+    }
+
+
+    @GetMapping("/statistics")
+    public List<UserStatisticsDTO> getUserJobStatistics() {
+        return  service.getUserJobStatistics();
     }
 }

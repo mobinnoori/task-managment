@@ -3,10 +3,10 @@ package com.taskmanagement.app.enums;
 public enum TaskStatus {
 
     TO_DO,
-    DOING,
-    DONE,
     IN_PROGRESS,
+    DONE,
     CANCELED,
     COMPLETED,
     FAILED,
+    PENDING,
 }
