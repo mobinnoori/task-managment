@@ -2,6 +2,8 @@ package com.taskmanagement.app.service;
 
 import com.taskmanagement.app.dto.JobDTO;
 import com.taskmanagement.app.dto.JobStatisticsDTO;
+import com.taskmanagement.app.dto.UserDTO;
+import com.taskmanagement.app.enums.JobRole;
 import com.taskmanagement.app.enums.TaskStatus;
 import com.taskmanagement.app.exception.JobNotFoundException;
 import com.taskmanagement.app.exception.UserNotFoundException;
@@ -10,6 +12,7 @@ import com.taskmanagement.app.model.Job;
 import com.taskmanagement.app.model.User;
 import com.taskmanagement.app.repository.JobRepository;
 import com.taskmanagement.app.repository.UserRepository;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +36,8 @@ public class JobService {
 
     public JobDTO createJob(JobDTO dto) {
         Job job = jobMapper.toEntity(dto);
-        Job savedJob = jobRepository.save(job);
-        return jobMapper.toDTO(savedJob);
+        jobRepository.save(job);
+        return dto;
     }
 
 
@@ -44,9 +47,8 @@ public class JobService {
 
         Job subJob = jobMapper.toEntity(dto);
         subJob.setParentJob(parent);
-
-        Job savedJob = jobRepository.save(subJob);
-        return jobMapper.toDTO(savedJob);
+        jobRepository.save(subJob);
+        return dto;
     }
 
 
@@ -101,8 +103,8 @@ public class JobService {
     }
 
 
-    public List<JobStatisticsDTO> filterJobsWithStats(TaskStatus status, Integer userId, String title) {
-        List<Job> jobs = jobRepository.filterJobsWithSubJobs(String.valueOf(status), userId, title);
+    public List<JobStatisticsDTO> filterJobsWithStats(Integer jobid, TaskStatus status, Integer userId, String title) {
+        List<Job> jobs = jobRepository.filterJobsWithSubJobs(jobid, status, userId, title);
         return jobs.stream().map(this::toStatisticsDTO).toList();
     }
 
@@ -115,6 +117,10 @@ public class JobService {
         int completed = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.COMPLETED).count();
         int inProgress = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.IN_PROGRESS).count();
         int pending = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.PENDING).count();
+        int canceled = (int)  subJobsStats.stream().filter(s -> s.status() == TaskStatus.CANCELED).count();
+        int todo = (int)  subJobsStats.stream().filter(s -> s.status() == TaskStatus.TO_DO).count();
+        int done = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.DONE).count();
+        int failed = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.FAILED).count();
 
         return new JobStatisticsDTO(
                 job.getId(),
@@ -126,6 +132,10 @@ public class JobService {
                 completed,
                 inProgress,
                 pending,
+                done,
+                canceled,
+                todo,
+                failed,
                 subJobsStats
         );
     }

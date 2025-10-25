@@ -2,6 +2,7 @@ package com.taskmanagement.app.service;
 
 import com.taskmanagement.app.dto.UserDTO;
 import com.taskmanagement.app.dto.UserStatisticsDTO;
+import com.taskmanagement.app.enums.JobRole;
 import com.taskmanagement.app.exception.UserNotFoundException;
 import com.taskmanagement.app.mapper.UserMapper;
 import com.taskmanagement.app.model.User;
@@ -24,7 +25,8 @@ public class UserService {
 
     public UserDTO createUser(UserDTO dto) {
         User user = userMapper.toEntityWithoutJobs(dto);
-        return userMapper.toDTO(userRepository.save(user));
+        userRepository.save(user);
+        return dto;
     }
 
 
@@ -62,7 +64,10 @@ public class UserService {
     }
 
 
-    public List<UserStatisticsDTO> getUserJobStatistics() {
-        return userRepository.getUserJobStatistics();
+    public List<UserDTO> filterUsers(Integer id, String name, String email, JobRole role) {
+        return userRepository.filterUsers(id, name, email, role)
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 }

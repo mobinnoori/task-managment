@@ -14,5 +14,9 @@ public record JobStatisticsDTO(
         int completedSubJobs,
         int inProgressSubJobs,
         int pendingSubJobs,
+        int doneSubJobs,
+        int canceledSubJobs,
+        int todoSubJobs,
+        int failedSubJobs,
         Set<JobStatisticsDTO> subJobs
 ) {}

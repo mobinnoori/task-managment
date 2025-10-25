@@ -11,16 +11,18 @@ import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Integer> {
 
-    @Query(value = """
-    SELECT DISTINCT j.* FROM jobs j
-    LEFT JOIN jobs sj ON sj.parent_job_id = j.id
-    LEFT JOIN users u ON u.id = j.user_id
-    WHERE (:status IS NULL OR j.status = :status)
+    @Query("""
+    SELECT DISTINCT j FROM Job j
+    LEFT JOIN FETCH j.subJobs sj
+    LEFT JOIN FETCH j.user u
+    WHERE (:jobId IS NULL OR j.id = :jobId)
+      AND (:status IS NULL OR j.status = :status)
       AND (:userId IS NULL OR u.id = :userId)
-      AND (:title IS NULL OR j.title ILIKE CONCAT('%', :title, '%'))
-""", nativeQuery = true)
+      AND (COALESCE(:title, '') = '' OR LOWER(j.title) LIKE LOWER(CONCAT('%', :title, '%')))
+""")
     List<Job> filterJobsWithSubJobs(
-            @Param("status") String status,
+            @Param("jobId") Integer jobId,
+            @Param("status") TaskStatus status,
             @Param("userId") Integer userId,
             @Param("title") String title
     );

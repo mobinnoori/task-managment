@@ -1,6 +1,6 @@
 package com.taskmanagement.app.repository;
 
-import com.taskmanagement.app.dto.UserStatisticsDTO;
+import com.taskmanagement.app.enums.JobRole;
 import com.taskmanagement.app.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,18 +18,25 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 
     @Query("""
-        SELECT new com.taskmanagement.app.dto.UserStatisticsDTO(
-            u.id,
-            u.name,
-            COUNT(j),
-            SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END),
-            SUM(CASE WHEN j.status = 'IN_PROGRESS' THEN 1 ELSE 0 END),
-            SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END)
-        )
-        FROM User u
-        LEFT JOIN u.jobs j
-        LEFT JOIN j.subJobs sj
-        GROUP BY u.id, u.name
-        """)
-    List<UserStatisticsDTO> getUserJobStatistics();
+                SELECT DISTINCT u FROM User u
+                LEFT JOIN FETCH u.jobs j
+                WHERE (
+                    :id IS NULL OR u.id = :id
+                )
+                AND (
+                    COALESCE(:name, '') = '' OR LOWER(u.name) LIKE LOWER(CONCAT('%', :name, '%'))
+                )
+                AND (
+                    COALESCE(:email, '') = '' OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))
+                )
+                AND (
+                    :role IS NULL OR u.role = :role
+                )
+            """)
+    List<User> filterUsers(
+            @Param("id") Integer id,
+            @Param("name") String name,
+            @Param("email") String email,
+            @Param("role") JobRole role
+    );
 }

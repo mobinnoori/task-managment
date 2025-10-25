@@ -42,7 +42,4 @@ public class Job {
     @OneToMany(mappedBy = "parentJob", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Job> subJobs = new HashSet<>();
-
-
-    // User statistics
 }

@@ -64,10 +64,11 @@ public class JobController {
 
     @GetMapping("/statistics")
     public List<JobStatisticsDTO> filterJobsWithStats(
+            @RequestParam(required = false) Integer jobId,
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) Integer userId,
             @RequestParam(required = false) String title
     ) {
-        return service.filterJobsWithStats(status, userId, title);
+        return service.filterJobsWithStats(jobId, status, userId, title);
     }
 }

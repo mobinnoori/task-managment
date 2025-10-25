@@ -2,6 +2,7 @@ package com.taskmanagement.app.controller;
 
 import com.taskmanagement.app.dto.UserDTO;
 import com.taskmanagement.app.dto.UserStatisticsDTO;
+import com.taskmanagement.app.enums.JobRole;
 import com.taskmanagement.app.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,8 +49,9 @@ public class UserController {
     }
 
 
-    @GetMapping("/statistics")
-    public List<UserStatisticsDTO> getUserJobStatistics() {
-        return  service.getUserJobStatistics();
+
+    @GetMapping("/filter")
+    public List<UserDTO> filterUsers(Integer id, String name, String email, JobRole role) {
+        return service.filterUsers(id, name, email, role);
     }
 }
