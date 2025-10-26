@@ -12,46 +12,52 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
 
     @PostMapping("/create")
     public UserDTO createUser(@RequestBody UserDTO dto) {
-        return service.createUser(dto);
+        return userService.createUser(dto);
     }
 
 
     @GetMapping("/all")
     public List<UserDTO> getAllUsers() {
-        return service.getAllUsers();
+        return userService.getAllUsers();
     }
 
 
     @GetMapping("/{id}")
     public UserDTO getUser(@PathVariable Integer id) {
-        return service.getUserById(id);
+        return userService.getUserById(id);
     }
 
 
     @PutMapping("/update/{id}")
     public UserDTO updateUser(@PathVariable Integer id, @RequestBody UserDTO dto) {
-        return service.updateUser(id, dto);
+        return userService.updateUser(id, dto);
     }
 
 
     @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Integer id) {
-        service.deleteUser(id);
+        userService.deleteUser(id);
     }
 
 
 
     @GetMapping("/filter")
-    public List<UserDTO> filterUsers(Integer id, String name, String email, JobRole role) {
-        return service.filterUsers(id, name, email, role);
+    public List<UserStatisticsDTO> filterUsers(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) JobRole role
+    ) {
+        return userService.filterUsers(userId, name, email, role);
     }
+
 }

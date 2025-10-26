@@ -17,24 +17,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByIdWithJobs(@Param("id") Integer id);
 
 
+
     @Query("""
-                SELECT DISTINCT u FROM User u
-                LEFT JOIN FETCH u.jobs j
-                WHERE (
-                    :id IS NULL OR u.id = :id
-                )
-                AND (
-                    COALESCE(:name, '') = '' OR LOWER(u.name) LIKE LOWER(CONCAT('%', :name, '%'))
-                )
-                AND (
-                    COALESCE(:email, '') = '' OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))
-                )
-                AND (
-                    :role IS NULL OR u.role = :role
-                )
-            """)
+        SELECT DISTINCT u FROM User u
+        LEFT JOIN FETCH u.jobs j
+        WHERE (:userId IS NULL OR u.id = :userId)
+            AND (COALESCE(:name, '') = '' OR LOWER(u.name) LIKE LOWER(CONCAT('%', :name, '%')))
+            AND (COALESCE(:email, '') = '' OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%')))
+            AND (:role IS NULL OR u.role = :role)
+    """)
     List<User> filterUsers(
-            @Param("id") Integer id,
+            @Param("userId") Integer userId,
             @Param("name") String name,
             @Param("email") String email,
             @Param("role") JobRole role

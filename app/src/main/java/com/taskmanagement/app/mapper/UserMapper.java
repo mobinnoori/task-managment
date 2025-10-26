@@ -13,6 +13,4 @@ public interface UserMapper {
 
     @Mapping(target = "jobs", ignore = true)
     User toEntityWithoutJobs(UserDTO dto);
-
-    User toEntity(UserDTO dto);
 }

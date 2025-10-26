@@ -64,10 +64,22 @@ public class UserService {
     }
 
 
-    public List<UserDTO> filterUsers(Integer id, String name, String email, JobRole role) {
-        return userRepository.filterUsers(id, name, email, role)
-                .stream()
-                .map(userMapper::toDTO)
+    public List<UserStatisticsDTO> filterUsers(Integer userId, String name, String email, JobRole role) {
+        List<User> users = userRepository.filterUsers(userId, name, email, role);
+        return users.stream()
+                .map(this::toStatisticsDTO)
                 .toList();
+    }
+
+    private UserStatisticsDTO toStatisticsDTO(User user) {
+        int totalJobs = user.getJobs() != null ? user.getJobs().size() : 0;
+
+        return new UserStatisticsDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole(),
+                totalJobs
+        );
     }
 }

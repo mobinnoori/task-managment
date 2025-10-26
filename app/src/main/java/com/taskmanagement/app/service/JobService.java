@@ -2,8 +2,6 @@ package com.taskmanagement.app.service;
 
 import com.taskmanagement.app.dto.JobDTO;
 import com.taskmanagement.app.dto.JobStatisticsDTO;
-import com.taskmanagement.app.dto.UserDTO;
-import com.taskmanagement.app.enums.JobRole;
 import com.taskmanagement.app.enums.TaskStatus;
 import com.taskmanagement.app.exception.JobNotFoundException;
 import com.taskmanagement.app.exception.UserNotFoundException;
@@ -12,7 +10,6 @@ import com.taskmanagement.app.model.Job;
 import com.taskmanagement.app.model.User;
 import com.taskmanagement.app.repository.JobRepository;
 import com.taskmanagement.app.repository.UserRepository;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
