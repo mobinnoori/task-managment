@@ -49,7 +49,6 @@ public class UserController {
     }
 
 
-
     @GetMapping("/filter")
     public List<UserStatisticsDTO> filterUsers(
             @RequestParam(required = false) Integer userId,

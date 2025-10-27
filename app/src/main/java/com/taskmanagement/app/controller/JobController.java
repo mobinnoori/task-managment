@@ -67,8 +67,9 @@ public class JobController {
             @RequestParam(required = false) Integer jobId,
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) Integer userId,
-            @RequestParam(required = false) String title
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Integer projectId
     ) {
-        return service.filterJobsWithStats(jobId, status, userId, title);
+        return service.filterJobsWithStats(jobId, status, userId, title, projectId);
     }
 }

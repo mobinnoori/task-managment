@@ -20,4 +20,10 @@ public class GlobalExceptionHandler {
         ApiResponse<Object> response = new ApiResponse<>("ERROR", ex.getMessage(), null);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleUserNotFound(ProjectNotFoundException ex) {
+        ApiResponse<Object> response = new ApiResponse<>("ERROR", ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

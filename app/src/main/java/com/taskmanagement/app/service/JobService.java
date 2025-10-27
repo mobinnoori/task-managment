@@ -13,8 +13,6 @@ import com.taskmanagement.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -100,24 +98,16 @@ public class JobService {
     }
 
 
-    public List<JobStatisticsDTO> filterJobsWithStats(Integer jobid, TaskStatus status, Integer userId, String title) {
-        List<Job> jobs = jobRepository.filterJobsWithSubJobs(jobid, status, userId, title);
-        return jobs.stream().map(this::toStatisticsDTO).toList();
+    public List<JobStatisticsDTO> filterJobsWithStats(Integer jobId, TaskStatus status, Integer userId, String title, Integer projectId) {
+        List<Job> jobs = jobRepository.filterJobsWithSubJobs(jobId, status, userId, title, projectId);
+
+        return jobs.stream()
+                .map(this::toStatiscsDTO)
+                .toList();
     }
 
-    private JobStatisticsDTO toStatisticsDTO(Job job) {
-        Set<JobStatisticsDTO> subJobsStats = job.getSubJobs().stream()
-                .map(this::toStatisticsDTO)
-                .collect(Collectors.toSet());
-
-        int totalSub = subJobsStats.size();
-        int completed = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.COMPLETED).count();
-        int inProgress = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.IN_PROGRESS).count();
-        int pending = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.PENDING).count();
-        int canceled = (int)  subJobsStats.stream().filter(s -> s.status() == TaskStatus.CANCELED).count();
-        int todo = (int)  subJobsStats.stream().filter(s -> s.status() == TaskStatus.TO_DO).count();
-        int done = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.DONE).count();
-        int failed = (int) subJobsStats.stream().filter(s -> s.status() == TaskStatus.FAILED).count();
+    private JobStatisticsDTO toStatiscsDTO(Job job) {
+        int totalSubJobs = job.getSubJobs().size();
 
         return new JobStatisticsDTO(
                 job.getId(),
@@ -125,15 +115,7 @@ public class JobService {
                 job.getStatus(),
                 job.getUser() != null ? job.getUser().getId() : null,
                 job.getUser() != null ? job.getUser().getName() : null,
-                totalSub,
-                completed,
-                inProgress,
-                pending,
-                done,
-                canceled,
-                todo,
-                failed,
-                subJobsStats
+                totalSubJobs
         );
     }
 }

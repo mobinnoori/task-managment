@@ -66,6 +66,7 @@ public class UserService {
 
     public List<UserStatisticsDTO> filterUsers(Integer userId, String name, String email, JobRole role) {
         List<User> users = userRepository.filterUsers(userId, name, email, role);
+
         return users.stream()
                 .map(this::toStatisticsDTO)
                 .toList();

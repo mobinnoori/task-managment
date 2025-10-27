@@ -15,15 +15,18 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     SELECT DISTINCT j FROM Job j
     LEFT JOIN FETCH j.subJobs sj
     LEFT JOIN FETCH j.user u
+    LEFT JOIN FETCH j.project p
     WHERE (:jobId IS NULL OR j.id = :jobId)
       AND (:status IS NULL OR j.status = :status)
       AND (:userId IS NULL OR u.id = :userId)
       AND (COALESCE(:title, '') = '' OR LOWER(j.title) LIKE LOWER(CONCAT('%', :title, '%')))
+      AND (:projectId IS NULL OR p.id = :projectId)
 """)
     List<Job> filterJobsWithSubJobs(
             @Param("jobId") Integer jobId,
             @Param("status") TaskStatus status,
             @Param("userId") Integer userId,
-            @Param("title") String title
+            @Param("title") String title,
+            @Param("projectId" ) Integer projectId
     );
 }
