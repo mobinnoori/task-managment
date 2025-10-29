@@ -2,12 +2,12 @@ package com.taskmanagement.app.controller;
 
 import com.taskmanagement.app.dto.ProjectDTO;
 import com.taskmanagement.app.service.ProjcetService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/v1/projects")
 public class ProjectController {
 
     private final ProjcetService projcetService;
@@ -17,7 +17,7 @@ public class ProjectController {
     }
 
     @PostMapping("/create")
-    public ProjectDTO createProject(ProjectDTO dto) {
+    public ProjectDTO createProject(@RequestBody ProjectDTO dto) {
         return projcetService.createProject(dto);
     }
 
@@ -31,7 +31,7 @@ public class ProjectController {
         return projcetService.findAllProjects();
     }
 
-
+    @GetMapping("/{id}")
     public ProjectDTO getProjectById(@PathVariable Integer id) {
         return projcetService.getProjectById(id);
     }

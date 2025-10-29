@@ -31,8 +31,8 @@ public class JobService {
 
     public JobDTO createJob(JobDTO dto) {
         Job job = jobMapper.toEntity(dto);
-        jobRepository.save(job);
-        return dto;
+        Job saved = jobRepository.save(job);
+        return jobMapper.toDTO(saved);
     }
 
 
@@ -42,8 +42,8 @@ public class JobService {
 
         Job subJob = jobMapper.toEntity(dto);
         subJob.setParentJob(parent);
-        jobRepository.save(subJob);
-        return dto;
+        Job saved = jobRepository.save(subJob);
+        return jobMapper.toDTO(saved);
     }
 
 

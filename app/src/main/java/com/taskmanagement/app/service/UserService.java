@@ -25,8 +25,8 @@ public class UserService {
 
     public UserDTO createUser(UserDTO dto) {
         User user = userMapper.toEntityWithoutJobs(dto);
-        userRepository.save(user);
-        return dto;
+        User save = userRepository.save(user);
+        return userMapper.toDTO(save);
     }
 
 
