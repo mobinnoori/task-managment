@@ -20,6 +20,7 @@ public interface JobMapper {
     JobDTO toDTO(Job job);
 
 
+    @Mapping(target = "project", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "parentJob", ignore = true)
     @Mapping(target = "subJobs", ignore = true)

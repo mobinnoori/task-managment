@@ -25,6 +25,8 @@ public class ProjcetService {
         this.projcetMapper = projcetMapper;
     }
 
+
+
     public ProjectDTO createProject(ProjectDTO dto) {
         Project project = projcetMapper.toEntity(dto);
         User owner = userRepository.findById(dto.ownerId())
@@ -37,6 +39,7 @@ public class ProjcetService {
         return projcetMapper.toDTO(saved);
     }
 
+
     public void addMember(Integer projectId, Integer userId) {
         Project project = projectRepository.findByIdWithDetails(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
@@ -48,14 +51,41 @@ public class ProjcetService {
         projectRepository.save(project);
     }
 
+
     public List<ProjectDTO> findAllProjects() {
         return projectRepository.findAll()
                 .stream().map(projcetMapper::toDTO).toList();
     }
 
+
     public ProjectDTO getProjectById(Integer id) {
         Project project = projectRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
+        return projcetMapper.toDTO(project);
+    }
+
+
+    public ProjectDTO updateProject(Integer projectId, ProjectDTO dto) {
+        Project project = projectRepository.findByIdWithDetails(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+
+        project.setName(dto.name());
+        project.setDescription(dto.description());
+
+        User owner = userRepository.findById(dto.ownerId())
+                        .orElseThrow(() -> new UserNotFoundException(dto.ownerId()));
+        project.setOwner(owner);
+
+        projectRepository.save(project);
+        return projcetMapper.toDTO(project);
+    }
+
+
+    public ProjectDTO deleteProject(Integer projectId) {
+        Project project =  projectRepository.findByIdWithDetails(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+
+        projectRepository.delete(project);
         return projcetMapper.toDTO(project);
     }
 }
