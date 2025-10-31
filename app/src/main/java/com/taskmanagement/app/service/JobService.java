@@ -92,7 +92,7 @@ public class JobService {
     }
 
     public void deleteJob(Integer id) {
-        Job job = jobRepository.findById(id)
+        jobRepository.findById(id)
                 .orElseThrow(() -> new JobNotFoundException(id));
         jobRepository.deleteById(id);
     }
