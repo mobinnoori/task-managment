@@ -118,4 +118,9 @@ public class JobService {
                 totalSubJobs
         );
     }
+
+
+    public String greet() {
+        return "Hello World!";
+    }
 }
