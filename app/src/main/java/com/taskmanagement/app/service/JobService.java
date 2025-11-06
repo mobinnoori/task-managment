@@ -116,11 +116,10 @@ public class JobService {
                 job.getUser() != null ? job.getUser().getId() : null,
                 job.getUser() != null ? job.getUser().getName() : null,
                 totalSubJobs
+
+
+
+                
         );
-    }
-
-
-    public String greet() {
-        return "Hello World!";
     }
 }
